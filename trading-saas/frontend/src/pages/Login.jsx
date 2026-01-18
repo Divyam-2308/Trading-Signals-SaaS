@@ -15,7 +15,7 @@ function Login() {
       formData.append('username', email); 
       formData.append('password', password);
 
-      const response = await axios.post('http://127.0.0.1:8000/auth/login', formData);
+      const response = await axios.post('https://trading-signals-saas.onrender.com/auth/login', formData);
 
       // store the token so we can use it later for authenticated requests
       localStorage.setItem('token', response.data.access_token);

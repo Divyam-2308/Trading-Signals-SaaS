@@ -19,7 +19,7 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 PRO_PRICE_ID = os.getenv("STRIPE_PRICE_ID")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET") 
 
-MY_DOMAIN = "http://localhost:5173"
+MY_DOMAIN = "https://your-frontend.vercel.app"
 
 # redis for idempotency
 r = Redis(

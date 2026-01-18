@@ -26,7 +26,7 @@ function Dashboard() {
         }
 
         try {
-            const res = await axios.get('http://127.0.0.1:8000/signals', {
+            const res = await axios.get('https://trading-signals-saas.onrender.com/signals/', {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -43,7 +43,7 @@ function Dashboard() {
     const handleUpgrade = async () => {
         const token = localStorage.getItem('token');
         try {
-            const res = await axios.post('http://127.0.0.1:8000/billing/create-checkout-session', {}, {
+            const res = await axios.post('https://trading-signals-saas.onrender.com/billing/create-checkout-session', {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             window.location.href = res.data.checkout_url;
