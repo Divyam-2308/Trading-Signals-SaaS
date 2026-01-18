@@ -28,7 +28,7 @@ A full-stack SaaS platform for stock trading signals with user authentication, S
 
 **Flow:**
 1. User signs up/logs in → JWT token issued
-2. Free users see 5 signals, Pro users see all 10
+2. Free users see 3 signals, Pro users see all 10
 3. Signals cached in Redis (5 min TTL)
 4. Stripe webhook upgrades user to Pro on payment
 
