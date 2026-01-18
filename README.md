@@ -1,14 +1,23 @@
 # Trading Signals SaaS
 
-A full-stack SaaS platform for stock trading signals with user authentication, Stripe payments, and Redis caching.
+A full-stack SaaS application for stock trading signals with JWT authentication, Stripe payments, and Redis caching.
+
+## 🔗 Live Demo
+
+- **Frontend:** [https://trading-signals-saas.vercel.app](https://trading-signals-saas.vercel.app)
+- **Backend API:** [https://trading-signals-saas.onrender.com](https://trading-signals-saas.onrender.com)
+- **Video Demo:** [Watch on Google Drive](https://drive.google.com/file/d/1wFcIRiNzEKIHZ9tOakYX9xyLmOq0Rum6/view?usp=sharing)
 
 ## Tech Stack
 
-- **Backend:** FastAPI, SQLAlchemy, SQLite
-- **Frontend:** React + Vite
-- **Cache:** Redis (Upstash)
-- **Payments:** Stripe
-- **Auth:** JWT tokens
+| Layer | Technology |
+|-------|------------|
+| Backend | FastAPI, SQLAlchemy, SQLite |
+| Frontend | React + Vite |
+| Cache | Redis (Upstash) |
+| Payments | Stripe |
+| Auth | JWT tokens (python-jose) |
+| Hosting | Render (Backend), Vercel (Frontend) |
 
 ## Architecture
 
@@ -32,7 +41,29 @@ A full-stack SaaS platform for stock trading signals with user authentication, S
 3. Signals cached in Redis (5 min TTL)
 4. Stripe webhook upgrades user to Pro on payment
 
-## Setup
+## Features
+
+- ✅ JWT authentication (signup/login)
+- ✅ Rate limiting with Redis (5 req/min per IP)
+- ✅ Redis caching for signals (5 min TTL)
+- ✅ Stripe subscription payments (₹499/month)
+- ✅ Webhook idempotency (prevent duplicate processing)
+- ✅ Free tier (3 signals) vs Pro tier (10 signals)
+- ✅ Subscription expiry tracking
+
+## API Endpoints
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/auth/signup` | Register new user | No |
+| POST | `/auth/login` | Login, get JWT | No |
+| GET | `/auth/me` | Get current user | Yes |
+| GET | `/signals/` | Get market signals | Yes |
+| POST | `/billing/create-checkout-session` | Start Stripe checkout | Yes |
+| GET | `/billing/status` | Get subscription status | Yes |
+| POST | `/billing/webhook` | Stripe webhook handler | No |
+
+## Setup Instructions
 
 ### Prerequisites
 - Python 3.10+
@@ -84,18 +115,6 @@ npm run dev
 
 Frontend runs on http://localhost:5173
 
-## API Endpoints
-
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/auth/signup` | Register new user | No |
-| POST | `/auth/login` | Login, get JWT | No |
-| GET | `/auth/me` | Get current user | Yes |
-| GET | `/signals` | Get market signals | Yes |
-| POST | `/billing/create-checkout-session` | Start Stripe checkout | Yes |
-| GET | `/billing/status` | Get subscription status | Yes |
-| POST | `/billing/webhook` | Stripe webhook handler | No |
-
 ## Testing Stripe Webhooks
 
 1. Install Stripe CLI: https://stripe.com/docs/stripe-cli
@@ -121,15 +140,11 @@ cd trading-saas/backend
 python -m pytest tests/test_api.py -v
 ```
 
-## Features
-
-- [x] JWT authentication (signup/login)
-- [x] Rate limiting (5 req/min per IP)
-- [x] Redis caching for signals (5 min TTL)
-- [x] Stripe subscription payments
-- [x] Webhook idempotency (no duplicate processing)
-- [x] Free tier (5 signals) vs Pro tier (10 signals)
-- [x] Subscription expiry tracking
+Tests include:
+- Signup endpoint test
+- Login endpoint test
+- Signals unauthorized access test
+- Signals authorized access test
 
 ## Project Structure
 
@@ -138,30 +153,33 @@ trading-saas/
 ├── backend/
 │   ├── app/
 │   │   ├── __init__.py
-│   │   ├── main.py          # FastAPI app
-│   │   ├── auth.py          # JWT utils
+│   │   ├── main.py          # FastAPI app + CORS
+│   │   ├── auth.py          # JWT utilities
 │   │   ├── database.py      # SQLAlchemy setup
 │   │   ├── models.py        # DB models
 │   │   ├── schemas.py       # Pydantic schemas
 │   │   └── routers/
-│   │       ├── auth.py      # auth endpoints
-│   │       ├── billing.py   # stripe endpoints
-│   │       └── signals.py   # signals endpoint
+│   │       ├── auth.py      # auth endpoints + rate limiting
+│   │       ├── billing.py   # stripe endpoints + webhooks
+│   │       └── signals.py   # signals endpoint + caching
 │   ├── tests/
 │   │   └── test_api.py
 │   └── requirements.txt
 └── frontend/
     ├── src/
     │   ├── App.jsx
+    │   ├── index.css
     │   └── pages/
     │       ├── Login.jsx
     │       ├── Signup.jsx
     │       └── Dashboard.jsx
+    ├── vercel.json
     └── package.json
 ```
 
-## Webhook Idempotency
+## Practical Challenges Addressed
 
+### Webhook Idempotency
 To prevent duplicate subscription upgrades when Stripe retries webhooks:
 
 ```python
@@ -175,8 +193,7 @@ redis.setex(f"webhook:{event_id}", 86400, "processed")
 
 Each webhook event ID is stored in Redis for 24 hours.
 
-## Caching Strategy
-
+### Caching Strategy
 Signals are cached in Redis to reduce load:
 
 ```python
@@ -189,21 +206,15 @@ signals = generate_market_data()
 redis.setex("market_signals", 300, json.dumps(signals))  # 5 min TTL
 ```
 
-## Deployment
+## Deployment Notes
 
-For production deployment on Render/Railway:
+For production on Render/Vercel:
 
-1. Set all env variables in dashboard
+1. Set all environment variables in dashboard
 2. Update `MY_DOMAIN` in billing.py to production URL
 3. Update CORS origins in main.py
 4. Set up Stripe webhook endpoint to production URL
 
-## Demo
-
-Video demo: []
-
-Shows: Signup → Login → View Free Signals → Upgrade to Pro → Payment → View All Signals
-
 ---
 
-Built for Hashtechy assignment
+Built for Hashtechy Python Full Stack Developer Assignment
