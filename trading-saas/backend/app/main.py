@@ -1,10 +1,23 @@
 from fastapi import FastAPI
 from .routers import auth , signals,billing
 from . import models, database
-
+from fastapi.middleware.cors import CORSMiddleware
 models.Base.metadata.create_all(bind=database.engine) 
 app = FastAPI()
 
+origins = [
+    "http://localhost:5173", 
+    "http://localhost:3000",
+    "https://your-production-domain.com" # we will add this later
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Include the Auth Router
 app.include_router(auth.router)
 app.include_router(signals.router)

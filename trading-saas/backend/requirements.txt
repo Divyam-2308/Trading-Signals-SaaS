@@ -1,12 +1,13 @@
-fastapi
-uvicorn
+fastapi>=0.100.0
+uvicorn[standard]
 sqlalchemy
-pydantic
+pydantic>=2.0
 pydantic-settings
 python-jose[cryptography] # For JWT
-passlib[bcrypt] # For Hashing Passwords 
+passlib[bcrypt]==1.7.4 # For Hashing Passwords
+bcrypt==4.1.3 # Compatible version with passlib
 python-multipart # For Login Form
 stripe # For Payment
-redis # For caching
+upstash-redis # For Upstash Redis caching
 python-dotenv # For reading .env file
 httpx # For making HTTP requests (Zerodha Mock)

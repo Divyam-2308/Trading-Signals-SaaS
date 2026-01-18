@@ -7,6 +7,7 @@ from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from . import models, database, schemas
 import os 
+import hashlib
 from dotenv import load_dotenv
 
 load_dotenv() 
@@ -20,13 +21,19 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 def get_password_hash(password):
-    """hash passowrd before storing in db"""
-    return pwd_context.hash(password[:72])
+    """hash password before storing in db"""
+    # Pre-hash with SHA256 for long passwords
+    if len(password.encode('utf-8')) > 72:
+        password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+    return pwd_context.hash(password)
 
 
 def verify_password(plain_password, hashed_password):
     """check if entered password matches stored hashed password"""
-    return pwd_context.verify(plain_password[:72], hashed_password)
+    # Pre-hash with SHA256 for long passwords
+    if len(plain_password.encode('utf-8')) > 72:
+        plain_password = hashlib.sha256(plain_password.encode('utf-8')).hexdigest()
+    return pwd_context.verify(plain_password, hashed_password)
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
