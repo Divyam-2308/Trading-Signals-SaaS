@@ -16,8 +16,7 @@ router = APIRouter(
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 PRO_PRICE_ID = os.getenv("STRIPE_PRICE_ID")
 
-# for now, we point to localhost. later we will change with frontend url
-MY_DOMAIN = "http://localhost:3000"
+MY_DOMAIN = "http://localhost:5173"
 
 @router.post("/create-checkout-session")
 def create_checkout_session(current_user: models.User = Depends(auth.get_current_user)):
