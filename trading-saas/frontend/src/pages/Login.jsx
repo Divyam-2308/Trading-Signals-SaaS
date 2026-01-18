@@ -13,6 +13,7 @@ function Login() {
     setLoading(true);
 
     try {
+      // backend uses oauth2 so we need formdata not json
       const formData = new FormData();
       formData.append('username', email);
       formData.append('password', password);
@@ -23,6 +24,7 @@ function Login() {
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
 
+      // save token for later api calls
       localStorage.setItem('token', response.data.access_token);
       navigate('/dashboard');
     } catch (error) {

@@ -8,9 +8,11 @@ function Dashboard() {
     const [subscriptionEndDate, setSubscriptionEndDate] = useState(null);
 
     useEffect(() => {
+        // check if coming back from stripe payment
         const query = new URLSearchParams(window.location.search);
         if (query.get('success')) {
             alert('Payment successful! Plan upgraded to PRO.');
+            // clean up url
             window.history.replaceState({}, '', '/dashboard');
         }
         fetchSignals();
@@ -18,6 +20,8 @@ function Dashboard() {
 
     const fetchSignals = async () => {
         const token = localStorage.getItem('token');
+
+        // no token = not logged in, redirect
         if (!token) {
             window.location.href = '/login';
             return;
@@ -28,11 +32,13 @@ function Dashboard() {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
+            // update state with response data
             setSignals(res.data.data);
             setPlan(res.data.plan);
             setSubscriptionEndDate(res.data.subscription_end_date);
             setLoading(false);
         } catch (err) {
+            // token probably expired or invalid
             console.log('signals fetch failed');
             window.location.href = '/login';
         }
@@ -41,11 +47,13 @@ function Dashboard() {
     const handleUpgrade = async () => {
         const token = localStorage.getItem('token');
         try {
+            // get checkout url from backend
             const res = await axios.post(
                 'https://trading-signals-saas.onrender.com/billing/create-checkout-session',
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
+            // redirect to stripe
             window.location.href = res.data.checkout_url;
         } catch (err) {
             alert('Checkout failed. Please try again.');
@@ -63,6 +71,7 @@ function Dashboard() {
 
     return (
         <div className="dashboard">
+            {/* header with title and actions */}
             <div className="dashboard-header">
                 <h1>📈 Market Signals</h1>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -90,6 +99,7 @@ function Dashboard() {
                 </div>
             </div>
 
+            {/* show current plan status */}
             <div className="status-bar">
                 <div className="plan">
                     Plan: <span className={plan === 'Pro' ? 'pro' : 'free'}>{plan}</span>
@@ -101,6 +111,7 @@ function Dashboard() {
                 )}
             </div>
 
+            {/* signals table */}
             <table className="signals-table">
                 <thead>
                     <tr>
@@ -124,6 +135,7 @@ function Dashboard() {
                 </tbody>
             </table>
 
+            {/* show upgrade prompt for free users */}
             {plan === 'Free' && (
                 <div className="upgrade-notice">
                     <p>🔒 Upgrade to PRO to unlock all trading signals</p>

@@ -12,6 +12,7 @@ function Signup() {
     const handleSignup = async (e) => {
         e.preventDefault();
 
+        // quick check before hitting the api
         if (password !== confirmPassword) {
             alert('Passwords do not match!');
             return;
@@ -19,6 +20,7 @@ function Signup() {
 
         setLoading(true);
         try {
+            // send signup request to backend
             await axios.post(
                 'https://trading-signals-saas.onrender.com/auth/signup',
                 { email, password },
@@ -28,6 +30,7 @@ function Signup() {
             alert('Signup Successful! Please login.');
             navigate('/login');
         } catch (error) {
+            // show whatever error backend sends, or fallback msg
             const errorMessage = error.response?.data?.detail || 'Signup Failed! Try again.';
             alert(errorMessage);
             console.error('Signup error:', error.response || error);
