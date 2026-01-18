@@ -8,7 +8,8 @@ app = FastAPI()
 origins = [
     "http://localhost:5173", 
     "http://localhost:3000",
-    # add prod domain here later
+    "https://trading-signals-saas-webapp.vercel.app",
+    "https://trading-signals-saas.onrender.com",
 ]
 
 app.add_middleware(
