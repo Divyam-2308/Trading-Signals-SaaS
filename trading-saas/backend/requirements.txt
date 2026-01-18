@@ -11,3 +11,4 @@ stripe # For Payment
 upstash-redis # For Upstash Redis caching
 python-dotenv # For reading .env file
 httpx # For making HTTP requests (Zerodha Mock)
+email-validator
