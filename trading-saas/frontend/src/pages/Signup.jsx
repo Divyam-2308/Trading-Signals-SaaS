@@ -12,7 +12,6 @@ function Signup() {
     const handleSignup = async (e) => {
         e.preventDefault();
 
-        // check passwords match
         if (password !== confirmPassword) {
             alert('Passwords do not match!');
             return;
@@ -23,16 +22,11 @@ function Signup() {
             await axios.post(
                 'https://trading-signals-saas.onrender.com/auth/signup',
                 { email, password },
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
+                { headers: { 'Content-Type': 'application/json' } }
             );
 
             alert('Signup Successful! Please login.');
             navigate('/login');
-
         } catch (error) {
             const errorMessage = error.response?.data?.detail || 'Signup Failed! Try again.';
             alert(errorMessage);
@@ -43,50 +37,54 @@ function Signup() {
     };
 
     return (
-        <div style={{ padding: '50px', textAlign: 'center' }}>
-            <h2>Trading SaaS - Sign Up</h2>
-            <form onSubmit={handleSignup} style={{ display: 'inline-block', textAlign: 'left' }}>
-                <div>
-                    <label>Email:</label><br />
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        style={{ padding: '8px', margin: '5px 0', width: '250px' }}
-                    />
-                </div>
-                <div>
-                    <label>Password:</label><br />
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        style={{ padding: '8px', margin: '5px 0', width: '250px' }}
-                    />
-                </div>
-                <div>
-                    <label>Confirm Password:</label><br />
-                    <input
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
-                        style={{ padding: '8px', margin: '5px 0', width: '250px' }}
-                    />
-                </div>
-                <button
-                    type="submit"
-                    disabled={loading}
-                    style={{ padding: '10px 20px', marginTop: '10px', width: '100%' }}
-                >
-                    {loading ? 'Signing up...' : 'Sign Up'}
-                </button>
-            </form>
-            <p style={{ marginTop: '20px' }}>
-                Already have an account? <Link to="/login">Login here</Link>
-            </p>
+        <div className="auth-container">
+            <div className="auth-card">
+                <h2>Create Account</h2>
+                <p className="subtitle">Start trading with real-time signals</p>
+
+                <form onSubmit={handleSignup}>
+                    <div className="form-group">
+                        <label>Email</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="you@example.com"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="••••••••"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Confirm Password</label>
+                        <input
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder="••••••••"
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" className="btn btn-primary" disabled={loading}>
+                        {loading ? 'Creating Account...' : 'Sign Up'}
+                    </button>
+                </form>
+
+                <p className="auth-footer">
+                    Already have an account? <Link to="/login">Sign in</Link>
+                </p>
+            </div>
         </div>
     );
 }

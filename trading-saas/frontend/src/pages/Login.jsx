@@ -5,12 +5,14 @@ import { useNavigate, Link } from 'react-router-dom';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     try {
-      // backend expects form data for oauth2
       const formData = new FormData();
       formData.append('username', email);
       formData.append('password', password);
@@ -18,59 +20,58 @@ function Login() {
       const response = await axios.post(
         'https://trading-signals-saas.onrender.com/auth/login',
         formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
+        { headers: { 'Content-Type': 'multipart/form-data' } }
       );
 
-      // store the token so we can use it later for authenticated requests
       localStorage.setItem('token', response.data.access_token);
-
-      // all good, redirect to dashboard
-      alert('Login Successful!');
       navigate('/dashboard');
-
     } catch (error) {
-      // show backend error message if available
       const errorMessage = error.response?.data?.detail || 'Login Failed! Check credentials.';
       alert(errorMessage);
       console.error('Login error:', error.response || error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: '50px', textAlign: 'center' }}>
-      <h2>Trading SaaS Login</h2>
-      <form onSubmit={handleLogin} style={{ display: 'inline-block', textAlign: 'left' }}>
-        <div>
-          <label>Email:</label><br />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ padding: '8px', margin: '5px 0' }}
-          />
-        </div>
-        <div>
-          <label>Password:</label><br />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ padding: '8px', margin: '5px 0' }}
-          />
-        </div>
-        <button type="submit" style={{ padding: '10px 20px', marginTop: '10px' }}>
-          Login
-        </button>
-      </form>
-      <p style={{ marginTop: '20px' }}>
-        Don't have an account? <Link to="/">Sign up</Link>
-      </p>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2>Welcome Back</h2>
+        <p className="subtitle">Sign in to access your signals</p>
+
+        <form onSubmit={handleLogin}>
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
+        </form>
+
+        <p className="auth-footer">
+          Don't have an account? <Link to="/">Create one</Link>
+        </p>
+      </div>
     </div>
   );
 }

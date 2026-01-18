@@ -8,13 +8,11 @@ function Dashboard() {
     const [subscriptionEndDate, setSubscriptionEndDate] = useState(null);
 
     useEffect(() => {
-        // stripe redirect check
         const query = new URLSearchParams(window.location.search);
         if (query.get('success')) {
-            alert('Payment done! Plan upgraded.');
+            alert('Payment successful! Plan upgraded to PRO.');
             window.history.replaceState({}, '', '/dashboard');
         }
-
         fetchSignals();
     }, []);
 
@@ -43,44 +41,69 @@ function Dashboard() {
     const handleUpgrade = async () => {
         const token = localStorage.getItem('token');
         try {
-            const res = await axios.post('https://trading-signals-saas.onrender.com/billing/create-checkout-session', {}, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await axios.post(
+                'https://trading-signals-saas.onrender.com/billing/create-checkout-session',
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
             window.location.href = res.data.checkout_url;
         } catch (err) {
-            alert('checkout failed');
+            alert('Checkout failed. Please try again.');
         }
     };
 
-    if (loading) return <h2>Loading...</h2>;
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+    };
+
+    if (loading) {
+        return <div className="loading">Loading signals...</div>;
+    }
 
     return (
-        <div style={{ padding: '50px', fontFamily: 'Arial' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="dashboard">
+            <div className="dashboard-header">
                 <h1>📈 Market Signals</h1>
-
-                {plan === 'Pro' ? (
-                    <span style={{ background: 'gold', padding: '10px', borderRadius: '5px', fontWeight: 'bold' }}>
-                        🏆 PRO MEMBER
-                    </span>
-                ) : (
-                    <button onClick={handleUpgrade} style={{ background: '#635bff', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-                        ⭐ Upgrade to PRO (₹499)
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {plan === 'Pro' ? (
+                        <span className="badge badge-pro">🏆 PRO</span>
+                    ) : (
+                        <button className="btn-upgrade" onClick={handleUpgrade}>
+                            Upgrade to PRO
+                        </button>
+                    )}
+                    <button
+                        onClick={handleLogout}
+                        style={{
+                            background: 'transparent',
+                            border: '1px solid rgba(255,255,255,0.2)',
+                            color: '#888',
+                            padding: '10px 16px',
+                            borderRadius: '50px',
+                            cursor: 'pointer',
+                            fontSize: '13px'
+                        }}
+                    >
+                        Logout
                     </button>
+                </div>
+            </div>
+
+            <div className="status-bar">
+                <div className="plan">
+                    Plan: <span className={plan === 'Pro' ? 'pro' : 'free'}>{plan}</span>
+                </div>
+                {plan === 'Pro' && subscriptionEndDate && (
+                    <div className="expires">
+                        Expires: {new Date(subscriptionEndDate).toLocaleDateString()}
+                    </div>
                 )}
             </div>
 
-            <h3>Status: <span style={{ color: plan === 'Pro' ? 'green' : 'orange' }}>{plan}</span></h3>
-
-            {plan === 'Pro' && subscriptionEndDate && (
-                <p style={{ fontSize: '14px', color: '#666' }}>
-                    expires: {new Date(subscriptionEndDate).toLocaleDateString()}
-                </p>
-            )}
-
-            <table border="1" cellPadding="10" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+            <table className="signals-table">
                 <thead>
-                    <tr style={{ background: '#f4f4f4' }}>
+                    <tr>
                         <th>Stock</th>
                         <th>Action</th>
                         <th>Price</th>
@@ -90,16 +113,22 @@ function Dashboard() {
                 <tbody>
                     {signals.map((s) => (
                         <tr key={s.id}>
-                            <td><b>{s.id}</b></td>
-                            <td style={{ color: s.action === 'BUY' ? 'green' : 'red', fontWeight: 'bold' }}>{s.action}</td>
-                            <td>₹{s.price}</td>
-                            <td>{s.timestamp}</td>
+                            <td className="signal-stock">{s.id}</td>
+                            <td className={s.action === 'BUY' ? 'signal-buy' : 'signal-sell'}>
+                                {s.action}
+                            </td>
+                            <td className="signal-price">₹{s.price}</td>
+                            <td className="signal-time">{s.timestamp}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            {plan === 'Free' && <p style={{ marginTop: '20px', color: 'gray' }}>🔒 upgrade to see all signals</p>}
+            {plan === 'Free' && (
+                <div className="upgrade-notice">
+                    <p>🔒 Upgrade to PRO to unlock all trading signals</p>
+                </div>
+            )}
         </div>
     );
 }

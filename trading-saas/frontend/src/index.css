@@ -1,0 +1,290 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+  min-height: 100vh;
+  color: #e0e0e0;
+}
+
+/* Auth Container - Signup/Login */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-card h2 {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.auth-card .subtitle {
+  color: #888;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  color: #aaa;
+  font-size: 13px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #635bff;
+  background: rgba(99, 91, 255, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #666;
+}
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #635bff 0%, #7c3aed 100%);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(99, 91, 255, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 24px;
+  color: #888;
+  font-size: 14px;
+}
+
+.auth-footer a {
+  color: #635bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Dashboard */
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.dashboard-header h1 {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.badge {
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.badge-pro {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #000;
+}
+
+.badge-free {
+  background: rgba(255, 255, 255, 0.1);
+  color: #888;
+}
+
+.btn-upgrade {
+  background: linear-gradient(135deg, #635bff 0%, #7c3aed 100%);
+  color: #fff;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-upgrade:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(99, 91, 255, 0.4);
+}
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.status-bar .plan {
+  font-size: 14px;
+  color: #888;
+}
+
+.status-bar .plan span {
+  font-weight: 600;
+}
+
+.status-bar .plan span.pro {
+  color: #22c55e;
+}
+
+.status-bar .plan span.free {
+  color: #f59e0b;
+}
+
+.status-bar .expires {
+  font-size: 13px;
+  color: #666;
+}
+
+/* Signals Table */
+.signals-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.signals-table th {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+}
+
+.signals-table td {
+  padding: 16px 20px;
+  font-size: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.signals-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.signal-stock {
+  font-weight: 600;
+  color: #fff;
+}
+
+.signal-buy {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.signal-sell {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.signal-price {
+  color: #e0e0e0;
+}
+
+.signal-time {
+  color: #666;
+  font-size: 13px;
+}
+
+.upgrade-notice {
+  text-align: center;
+  margin-top: 32px;
+  padding: 24px;
+  background: rgba(99, 91, 255, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(99, 91, 255, 0.2);
+}
+
+.upgrade-notice p {
+  color: #a5a0ff;
+  font-size: 14px;
+}
+
+/* Loading */
+.loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 16px;
+}
