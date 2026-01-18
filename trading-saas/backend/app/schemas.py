@@ -1,24 +1,23 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from typing import Optional
 
-# request body when user signs up
+# signup request
 class UserCreate(BaseModel):
     email: EmailStr
     password: str = Field(..., max_length=72)
 
-# what we send back to the frontend after user signs up or logs in
+# response after signup/login
 class UserOut(BaseModel):
     id: int
     email: EmailStr
     is_pro: bool
 
-    class Config:
-        from_attributes = True 
+    model_config = ConfigDict(from_attributes=True)
 
 class Token(BaseModel):
     access_token: str
     token_type: str
 
-#used in auth.py to decode jwt
+# for jwt decode
 class TokenData(BaseModel):
     email: Optional[EmailStr] = None

@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
+from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 from .. import models, database, auth
 from upstash_redis import Redis
 from dotenv import load_dotenv
-import json
 import os
+import json
 import random
 
 load_dotenv()
@@ -14,7 +15,7 @@ router = APIRouter(
     tags=["Signals"]
 )
 
-# connect to upstash redis
+# redis cache
 r = Redis(
     url=os.getenv("UPSTASH_REDIS_REST_URL"),
     token=os.getenv("UPSTASH_REDIS_REST_TOKEN")
@@ -36,27 +37,36 @@ def generate_market_data():
 
 @router.get("/")
 def get_signals(current_user: models.User = Depends(auth.get_current_user)):
-    # check redis cache first
+    # try cache first
     cached_data = r.get("market_signals")
     
     if cached_data:
         signals = json.loads(cached_data)
     else:
-        # generate and cache for 5 mins
         signals = generate_market_data()
-        r.setex("market_signals", 300, json.dumps(signals))
+        r.setex("market_signals", 300, json.dumps(signals))  # 5 min cache
     
-    # pro users get all signals, free users get limited
-    if current_user.is_pro:
+    # check if pro is still valid
+    is_active_pro = False
+    if current_user.is_pro and current_user.subscription_end_date:
+        sub_end = current_user.subscription_end_date
+        if sub_end.tzinfo is None:
+            sub_end = sub_end.replace(tzinfo=timezone.utc)
+        
+        is_active_pro = sub_end > datetime.now(timezone.utc)
+    
+    if is_active_pro:
         return {
             "status": "success",
             "plan": "Pro",
+            "subscription_end_date": current_user.subscription_end_date.isoformat(),
             "data": signals
         }
     else:
+        # free users get 5 only
         return {
             "status": "success",
             "plan": "Free",
             "message": "Upgrade to Pro to see all signals",
-            "data": signals[:5]
+            "data": signals[:3]
         }

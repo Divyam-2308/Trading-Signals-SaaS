@@ -8,7 +8,7 @@ app = FastAPI()
 origins = [
     "http://localhost:5173", 
     "http://localhost:3000",
-    "https://your-production-domain.com" # we will add this later
+    # add prod domain here later
 ]
 
 app.add_middleware(
@@ -18,7 +18,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# Include the Auth Router
+
+# routes
 app.include_router(auth.router)
 app.include_router(signals.router)
 app.include_router(billing.router)
