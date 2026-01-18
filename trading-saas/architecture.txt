@@ -1,0 +1,5 @@
+The Architecture 
+1. FastAPI :- It will Handles logic
+2. SQLite :- We will store users and subscription status
+3. Redis :- Stores the "Stock Signals" for caching sessions and count API hits for rate limiting
+4. Stripe: Handles the money and tells our API "Payment Successful" via a Webhook

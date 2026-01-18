@@ -1,0 +1,3 @@
+Phase 2: The Database Models (The Foundation of our assignment)
+1. database.py 
+2.models.py

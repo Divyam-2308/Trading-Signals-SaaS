@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+pydantic-settings
+python-jose[cryptography] # For JWT
+passlib[bcrypt] # For Hashing Passwords 
+python-multipart # For Login Form
+stripe # For Payment
+redis # For caching
+python-dotenv # For reading .env file
+httpx # For making HTTP requests (Zerodha Mock)
