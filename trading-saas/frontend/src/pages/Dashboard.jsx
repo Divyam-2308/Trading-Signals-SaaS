@@ -10,18 +10,18 @@ function Dashboard() {
     useEffect(() => {
         // stripe redirect check
         const query = new URLSearchParams(window.location.search);
-        if (query.get('success')){
+        if (query.get('success')) {
             alert('Payment done! Plan upgraded.');
             window.history.replaceState({}, '', '/dashboard');
         }
-        
+
         fetchSignals();
-    }, []); 
+    }, []);
 
     const fetchSignals = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
-            window.location.href = '/';
+            window.location.href = '/login';
             return;
         }
 
@@ -36,7 +36,7 @@ function Dashboard() {
             setLoading(false);
         } catch (err) {
             console.log('signals fetch failed');
-            window.location.href = '/';
+            window.location.href = '/login';
         }
     };
 
@@ -58,7 +58,7 @@ function Dashboard() {
         <div style={{ padding: '50px', fontFamily: 'Arial' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h1>📈 Market Signals</h1>
-                
+
                 {plan === 'Pro' ? (
                     <span style={{ background: 'gold', padding: '10px', borderRadius: '5px', fontWeight: 'bold' }}>
                         🏆 PRO MEMBER

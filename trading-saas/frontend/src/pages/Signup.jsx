@@ -31,7 +31,7 @@ function Signup() {
             );
 
             alert('Signup Successful! Please login.');
-            navigate('/');
+            navigate('/login');
 
         } catch (error) {
             const errorMessage = error.response?.data?.detail || 'Signup Failed! Try again.';
@@ -44,7 +44,7 @@ function Signup() {
 
     return (
         <div style={{ padding: '50px', textAlign: 'center' }}>
-            <h2>Trading SaaS Signup</h2>
+            <h2>Trading SaaS - Sign Up</h2>
             <form onSubmit={handleSignup} style={{ display: 'inline-block', textAlign: 'left' }}>
                 <div>
                     <label>Email:</label><br />
@@ -85,7 +85,7 @@ function Signup() {
                 </button>
             </form>
             <p style={{ marginTop: '20px' }}>
-                Already have an account? <Link to="/">Login here</Link>
+                Already have an account? <Link to="/login">Login here</Link>
             </p>
         </div>
     );
